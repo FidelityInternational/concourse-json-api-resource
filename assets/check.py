@@ -22,6 +22,7 @@ def extract_vars_from_payload(payload):
     return(url, verify_ssl, auth_token, post_data, content_type, json_path)
 
 def get_response_from_api(url, verify_ssl, auth_token, post_data, content_type):
+    # pylint: disable=no-member
     requests.packages.urllib3.disable_warnings() # Don't display python's warning about using a certificate manager module
     try:
         api_response=requests.post(url, post_data, verify=False, headers={'Authorization': auth_token, 'Content-Type': content_type})
@@ -41,7 +42,7 @@ def decode_response(response, json_path):
         data=json.loads(response)
         return(dpath.util.get(data, json_path))
     except Exception as e:
-        print("Unable to decode JSON response")
+        print("Unable to find the `json_path` within decoded JSON response")
         print(e)
         sys.exit(1)
 
