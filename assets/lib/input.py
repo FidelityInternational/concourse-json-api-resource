@@ -56,10 +56,10 @@ if __name__ == "__main__":
             resource_request.close()
         response=get_response_from_api(url, verify_ssl, auth_token, post_data, content_type)
         version=str(decode_response(response, json_path))
-        print("[{\"ref\": \""+version+"\"}]")
-        with open(sys.argv[1]+file_name, 'w') as outfile:
+        with open(sys.argv[1]+'/'+file_name, 'w') as outfile:
             outfile.write(response)
             outfile.close()
+        print("[{\"version\": {\"ref\" : \""+version+"\"}}]")
     except Exception as e:
         print("Unexpected error encountered in `main`")
         print(e)
