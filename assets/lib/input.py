@@ -59,7 +59,7 @@ if __name__ == "__main__":
         with open(sys.argv[1]+'/'+file_name, 'w') as outfile:
             outfile.write(response)
             outfile.close()
-        print("[{\"version\": {\"ref\" : \""+version+"\"}}]")
+        print("{\"version\": {\"ref\": \""+version+"\"}}")
     except Exception as e:
         print("Unexpected error encountered in `main`")
         print(e)
