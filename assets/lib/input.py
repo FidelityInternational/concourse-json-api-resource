@@ -14,7 +14,7 @@ def extract_vars_from_payload(payload):
         post_data=payload['source']['post_data']
         content_type=payload['source']['content_type']
         json_path=payload['source']['json_path']
-        file_name='/tmp/build/get/'+payload['source']['file_name']
+        file_name=payload['source']['file_name']
     except (KeyError, TypeError) as e:
         print("Error processing payload from concourse")
         print("Required source parameters are url, verify_ssl, auth_token, post_data and content_type")
@@ -49,15 +49,18 @@ def decode_response(response, json_path):
 
 if __name__ == "__main__":
     try:
-        url, verify_ssl, auth_token, post_data, content_type, json_path, file_name = extract_vars_from_payload(json.loads(sys.stdin.read()))
+        payload=sys.stdin.read()
+        url, verify_ssl, auth_token, post_data, content_type, json_path, file_name = extract_vars_from_payload(json.loads(payload))
+        with open('/tmp/resource-request','w') as resource_request:
+            resource_request.write(payload)
+            resource_request.close()
         response=get_response_from_api(url, verify_ssl, auth_token, post_data, content_type)
         version=str(decode_response(response, json_path))
         print("[{\"version\": \""+version+"\"}]")
-        with open(file_name, 'w') as outfile:
+        with open(sys.argv[1]+file_name, 'w') as outfile:
             outfile.write(response)
             outfile.close()
     except Exception as e:
         print("Unexpected error encountered in `main`")
         print(e)
         sys.exit(1)
-
