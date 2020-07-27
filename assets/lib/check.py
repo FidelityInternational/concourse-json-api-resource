@@ -52,7 +52,7 @@ if __name__ == "__main__":
         url, verify_ssl, auth_token, post_data, content_type, json_path = extract_vars_from_payload(json.loads(sys.stdin.read()))
         response=get_response_from_api(url, verify_ssl, auth_token, post_data, content_type)
         version=str(decode_response(response, json_path))
-        print("[{\"version\": \""+version+"\"}]")
+        print("[{\"ref\": \""+version+"\"}]")
     except Exception as e:
         print("Unexpceted error in `main`")
         print(e)
