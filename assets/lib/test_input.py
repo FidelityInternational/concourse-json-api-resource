@@ -11,14 +11,14 @@ class TestPayloadVars:
             input.extract_vars_from_payload('{"source": {"url": "https://some.url/", "verify_ssl": "true", "auth_token":"bearer_token", "post_data":"{\"code\": \"GET_SOME_DATA\"}", "json_path": "/some/json/path"}')
 
     def test_good_payload(self):
-            url, verify_ssl, auth_token, post_data, content_type, json_path, file_path = input.extract_vars_from_payload({"source": {"url": "https://some.url", "verify_ssl": "true", "auth_token":"some_auth_token", "post_data":"{\"code\": \"GET_SOME_DATA\"}", "content_type": "application/json", "json_path": "/some/json/path", "file_path": "/tmp/build/get"}})
+            url, verify_ssl, auth_token, post_data, content_type, json_path, file_name = input.extract_vars_from_payload({"source": {"url": "https://some.url", "verify_ssl": "true", "auth_token":"some_auth_token", "post_data":"{\"code\": \"GET_SOME_DATA\"}", "content_type": "application/json", "json_path": "/some/json/path", "file_name": "response_file_name"}})
             assert url == "https://some.url"
             assert verify_ssl == "true"
             assert auth_token == "some_auth_token"
             assert post_data == "{\"code\": \"GET_SOME_DATA\"}"
             assert content_type == "application/json"
             assert json_path == "/some/json/path"
-            assert file_path == "/tmp/build/get"
+            assert file_name == "/tmp/build/get/response_file_name"
 
 class TestAPIResponse:
     def test_request_sent(self, requests_mock):
