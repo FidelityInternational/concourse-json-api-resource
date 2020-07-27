@@ -46,7 +46,6 @@ resources:
 
 ```
 
-
 ## development
 
 ### pre-reqs
