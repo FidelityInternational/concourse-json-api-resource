@@ -18,8 +18,12 @@ This resource accepts the following inputs:
 
 ## development
 
+### pre-reqs
+
+`pip install -r requirements.txt` to get all of the required python libraries installed.
+
 Unit tests exist for all functions.
-Run `pytest` to confirm that all tests pass before you make any changes, and run it again after changes to confirm that you've not broken anything.
+Run `pytest -v` to confirm that all tests pass before you make any changes, and run it again after changes to confirm that you've not broken anything.
 
 To test things out on the command line (outside of a Concourse pipeline) when doing development work, you will need to supply a suitable `payload` on stdin.
 
