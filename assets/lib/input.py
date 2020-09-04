@@ -26,7 +26,7 @@ def get_response_from_api(url, verify_ssl, auth_token, post_data, content_type):
     # pylint: disable=no-member
     requests.packages.urllib3.disable_warnings() # Don't display python's warning about using a certificate manager module
     try:
-        api_response=requests.post(url, post_data, verify=False, headers={'Authorization': auth_token, 'Content-Type': content_type})
+        api_response=requests.post(url, post_data, verify=False, headers={'Authorization': auth_token, 'Content-Type': content_type}, timeout=5.0)
     except Exception as e:
         print(f"Failed to get response from API {url}")
         print(e)
