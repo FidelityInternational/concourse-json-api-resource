@@ -20,7 +20,7 @@ def extract_vars_from_payload(payload):
         print("Required source parameters are url, verify_ssl, auth_token, post_data and content_type")
         print(e)
         sys.exit(1)
-    return(url, verify_ssl, auth_token, post_data, content_type, json_path)
+    return(url, verify_ssl, auth_token, post_data, content_type, json_path, version_key)
 
 def get_response_from_api(url, verify_ssl, auth_token, post_data, content_type):
     # pylint: disable=no-member
@@ -49,7 +49,7 @@ def decode_response(response, json_path):
 
 if __name__ == "__main__":
     try:
-        url, verify_ssl, auth_token, post_data, content_type, json_path = extract_vars_from_payload(json.loads(sys.stdin.read()))
+        url, verify_ssl, auth_token, post_data, content_type, json_path, version_key = extract_vars_from_payload(json.loads(sys.stdin.read()))
         response=get_response_from_api(url, verify_ssl, auth_token, post_data, content_type)
         version=str(decode_response(response, json_path+"/"+version_key))
         print("[{\"ref\": \""+version+"\"}]")

@@ -8,7 +8,7 @@ import check
 class TestPayloadVars:
     def test_incomlete_payload(self):
         with pytest.raises(SystemExit):
-            check.extract_vars_from_payload('{"source": {"url": "https://some.url/", "verify_ssl": "true", "auth_token":"bearer_token", "post_data":"{\"code\": \"GET_SOME_DATA\"}", "json_path": "/some/json/path"}')
+            check.extract_vars_from_payload('{"source": {"url": "https://some.url/", "verify_ssl": "true", "auth_token":"bearer_token", "post_data":"{\"code\": \"GET_SOME_DATA\"}", "json_path": "/some/json/path", "version_key": "json_element"}')
 
     def test_good_payload(self):
             url, verify_ssl, auth_token, post_data, content_type, json_path = check.extract_vars_from_payload({"source": {"url": "https://some.url", "verify_ssl": "true", "auth_token":"some_auth_token", "post_data":"{\"code\": \"GET_SOME_DATA\"}", "content_type":"application/json", "json_path":"/some/json/path"}})
@@ -18,6 +18,7 @@ class TestPayloadVars:
             assert post_data == "{\"code\": \"GET_SOME_DATA\"}"
             assert content_type == "application/json"
             assert json_path == "/some/json/path"
+            assert version_key == 'some_json_key'
 
 class TestAPIResponse:
     def test_request_sent(self, requests_mock):
