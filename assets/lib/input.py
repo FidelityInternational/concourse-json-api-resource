@@ -14,6 +14,7 @@ def extract_vars_from_payload(payload):
         post_data=payload['source']['post_data']
         content_type=payload['source']['content_type']
         json_path=payload['source']['json_path']
+        version_key=payload['source']['version_key']
         file_name=payload['source']['file_name']
     except (KeyError, TypeError) as e:
         print("Error processing payload from concourse")
@@ -52,9 +53,10 @@ if __name__ == "__main__":
         payload=sys.stdin.read()
         url, verify_ssl, auth_token, post_data, content_type, json_path, file_name = extract_vars_from_payload(json.loads(payload))
         response=get_response_from_api(url, verify_ssl, auth_token, post_data, content_type)
-        version=str(decode_response(response, json_path))
+        version=str(decode_response(response, json_path+"/"+version_key))
+        element=str(decode_response(response, json_path))
         with open(sys.argv[1]+'/'+file_name, 'w') as outfile:
-            outfile.write(response)
+            outfile.write(element)
             outfile.close()
         print("{\"version\": {\"ref\": \""+version+"\"}}")
     except Exception as e:

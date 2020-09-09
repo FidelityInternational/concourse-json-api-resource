@@ -14,6 +14,7 @@ def extract_vars_from_payload(payload):
         post_data=payload['source']['post_data']
         content_type=payload['source']['content_type']
         json_path=payload['source']['json_path']
+        version_key=payload['source']['version_key']
     except (KeyError, TypeError) as e:
         print("Error processing payload from concourse")
         print("Required source parameters are url, verify_ssl, auth_token, post_data and content_type")
@@ -46,12 +47,11 @@ def decode_response(response, json_path):
         print(e)
         sys.exit(1)
 
-
 if __name__ == "__main__":
     try:
         url, verify_ssl, auth_token, post_data, content_type, json_path = extract_vars_from_payload(json.loads(sys.stdin.read()))
         response=get_response_from_api(url, verify_ssl, auth_token, post_data, content_type)
-        version=str(decode_response(response, json_path))
+        version=str(decode_response(response, json_path+"/"+version_key))
         print("[{\"ref\": \""+version+"\"}]")
     except Exception as e:
         print("Unexpceted error in `main`")
