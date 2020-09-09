@@ -56,7 +56,7 @@ if __name__ == "__main__":
         version=str(decode_response(response, json_path+"/"+version_key))
         element=str(decode_response(response, json_path))
         with open(sys.argv[1]+'/'+file_name, 'w') as outfile:
-            outfile.write(element)
+            json.dump(element, outfile)
             outfile.close()
         print("{\"version\": {\"ref\": \""+version+"\"}}")
     except Exception as e:
