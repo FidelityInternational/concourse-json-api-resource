@@ -54,11 +54,11 @@ if __name__ == "__main__":
         url, verify_ssl, auth_token, post_data, content_type, json_path, version_key, file_name = extract_vars_from_payload(json.loads(payload))
         response=get_response_from_api(url, verify_ssl, auth_token, post_data, content_type)
         version=str(decode_response(response, json_path+"/"+version_key))
-        element=str(decode_response(response, json_path))
+        element=decode_response(response, json_path)
         with open(sys.argv[1]+'/'+file_name, 'w') as outfile:
-            json.dump(element, outfile)
+            outfile.write(json.dumps(element))
             outfile.close()
-        print("{\"version\": {\"ref\": \""+version+"\"}}")
+        print(json.dumps({"version":{"ref":version}}))
     except Exception as e:
         print("Unexpected error encountered in `main`")
         print(e)
