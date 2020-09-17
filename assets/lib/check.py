@@ -52,10 +52,10 @@ def get_ref(response,json_path, json_key):
 
 if __name__ == "__main__":
     try:
-        url, verify_ssl, auth_toke, post_data, content_type, json_path, json_key = extract_vars_from_payload(json.loads(sys.stdin.read()))
+        url, verify_ssl, auth_token, post_data, content_type, json_path, json_key = extract_vars_from_payload(json.loads(sys.stdin.read()))
         response=get_response_from_api(url, verify_ssl, auth_token, post_data, content_type)
         version=str(get_ref(response, json_path, json_key))
-        print("[{\"ref\": \""+version+"\"}]")
+        print(json.dumps([{"ref": version}]))
     except Exception as e:
         print("Unexpceted error in `main`")
         print(e)

@@ -72,7 +72,12 @@ if __name__ == "__main__":
             with open(sys.argv[1]+'/'+file_name, 'w') as outfile:
                 outfile.write(json.dumps(data))
                 outfile.close()
-        print(json.dumps({"version":{"ref":version}}))
+        metadata_info=""
+        for key in data.keys():
+            metadata_info+=(f"{{'name': '{key}', 'value': '{data[key]}'}},")
+
+        print(json.dumps({"version":{"ref":version}, "metadata":[metadata_info]}))
+
     except Exception as e:
         print("Unexpected error encountered in `main`")
         print(e)
