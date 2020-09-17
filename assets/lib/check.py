@@ -14,13 +14,13 @@ def extract_vars_from_payload(payload):
         post_data=payload['source']['post_data']
         content_type=payload['source']['content_type']
         json_path=payload['source']['json_path']
-        version_key=payload['source']['version_key']
+        json_key=payload['source']['version_key']
     except (KeyError, TypeError) as e:
         print("Error processing payload from concourse")
         print("Required source parameters are url, verify_ssl, auth_token, post_data and content_type")
         print(e)
         sys.exit(1)
-    return(url, verify_ssl, auth_token, post_data, content_type, json_path, version_key)
+    return(url, verify_ssl, auth_token, post_data, content_type, json_path, json_key)
 
 def get_response_from_api(url, verify_ssl, auth_token, post_data, content_type):
     # pylint: disable=no-member
@@ -38,20 +38,23 @@ def get_response_from_api(url, verify_ssl, auth_token, post_data, content_type):
         print(api_response.text)
         sys.exit(1)
 
-def decode_response(response, json_path):
+def get_ref(response,json_path, json_key):
     try:
         data=json.loads(response)
-        return(dpath.util.get(data, json_path))
+        for obj in data[json_path]:
+            return (obj[json_key])
+        return 0
+
     except Exception as e:
-        print("Unable to find the `json_path` within decoded JSON response")
+        print("Error while searching key " + json + " in JSON response")
         print(e)
         sys.exit(1)
 
 if __name__ == "__main__":
     try:
-        url, verify_ssl, auth_token, post_data, content_type, json_path, version_key = extract_vars_from_payload(json.loads(sys.stdin.read()))
+        url, verify_ssl, auth_toke, post_data, content_type, json_path, json_key = extract_vars_from_payload(json.loads(sys.stdin.read()))
         response=get_response_from_api(url, verify_ssl, auth_token, post_data, content_type)
-        version=str(decode_response(response, json_path+"/"+version_key))
+        version=str(get_ref(response, json_path, json_key))
         print("[{\"ref\": \""+version+"\"}]")
     except Exception as e:
         print("Unexpceted error in `main`")

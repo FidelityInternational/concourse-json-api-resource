@@ -15,7 +15,8 @@ This resource accepts the following inputs:
 * `source.auth_token` : Bearer token to be used when communicating with `source.url`
 * `source.post_data` : The data to be sent to the `source.url` as part of a POST request.
 * `source.content_type` : Set the content type to use in the headers (e.g. `application/json`)
-* `source.json_path` : A `dpath` style notation for where to find the `version` data within the json for the response to Concourse (e.g. '/data/0/version_id')
+* `source.json_path` : The json element key holding the data to process
+* `source.version_key` : The json element key holding the version to be used as reference is Concourse
 * `source.file_name` : The `file_name` to create and save the JSON api response data into. (Just the file name, no path allowed)
 
 ## Pipeline example
@@ -38,7 +39,8 @@ resources:
     auth_token: AbcD1234FgHKJl
     post_data: '{"code": "EXECUTE_API_OPERATION"}'
     content_type: application/data
-    json_path: /RESPONSE_DATA_TARGETS/0/TARGET_ID
+    json_path: RESPONSE_DATA_TARGETS
+    version_key: TARGET_ID
     file_name: api_data.json
     debug: true
 
