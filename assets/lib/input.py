@@ -39,17 +39,17 @@ def get_response_from_api(url, verify_ssl, auth_token, post_data, content_type):
         print(api_response.text)
         sys.exit(1)
 
-def get_ref(response,json_path, json_key):                      
-    try:                           
+def get_ref(response,json_path, json_key):
+    try:
         data=json.loads(response)
         for obj in data[json_path]:
-            return (obj[json_key])                                                           
+            return (obj[json_key])
         return 0
-        
-    except Exception as e:                                                                                                                    
-        print("Error while searching key " + json + " in JSON response")                    
-        print(e)                                                                                                                              
-        sys.exit(1)    
+
+    except Exception as e:
+        print("Error while searching key " + json + " in JSON response")
+        print(e)
+        sys.exit(1)
 
 def get_data(response, json_path):
     try:
