@@ -38,13 +38,12 @@ def get_response_from_api(url, verify_ssl, auth_token, post_data, content_type):
         print(api_response.text)
         sys.exit(1)
 
-def decode_response(response,json_path, json_key):                      
+def get_ref(response,json_path, json_key):                      
     try:                           
-        data=dpath.util.get(json.loads(response),json_path)
-        if data[json_key] is None
-            return 0
-        else:
+        data=json.loads(response)
+        for obj in data[json_path]:
             return (obj[json_key])                                                           
+        return 0
         
     except Exception as e:                                                                                                                    
         print("Error while searching key " + json + " in JSON response")                    
@@ -55,7 +54,7 @@ if __name__ == "__main__":
     try:                                                                                                                                      
         url, verify_ssl, auth_token, post_data, content_type, json_path, json_key = extract_vars_from_payload(json.loads(sys.stdin.read()))
         response=get_response_from_api(url, verify_ssl, auth_token, post_data, content_type)
-        version=str(decode_response(response, json_path, json_key))
+        version=str(get_ref(response, json_path, json_key))
         print("[{\"ref\": \""+version+"\"}]")
     except Exception as e:                              
         print("Unexpceted error in `main`")                                                            
