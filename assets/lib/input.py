@@ -14,14 +14,14 @@ def extract_vars_from_payload(payload):
         post_data=payload['source']['post_data']
         content_type=payload['source']['content_type']
         json_path=payload['source']['json_path']
-        version_key=payload['source']['version_key']
+        json_key=payload['source']['version_key']
         file_name=payload['source']['file_name']
     except (KeyError, TypeError) as e:
         print("Error processing payload from concourse")
         print("Required source parameters are url, verify_ssl, auth_token, post_data and content_type")
         print(e)
         sys.exit(1)
-    return(url, verify_ssl, auth_token, post_data, content_type, json_path, version_key, file_name)
+    return(url, verify_ssl, auth_token, post_data, content_type, json_path, json_key, file_name)
 
 def get_response_from_api(url, verify_ssl, auth_token, post_data, content_type):
     # pylint: disable=no-member
@@ -39,10 +39,23 @@ def get_response_from_api(url, verify_ssl, auth_token, post_data, content_type):
         print(api_response.text)
         sys.exit(1)
 
-def decode_response(response, json_path):
+def get_ref(response,json_path, json_key):                      
+    try:                           
+        data=json.loads(response)
+        for obj in data[json_path]:
+            return (obj[json_key])                                                           
+        return 0
+        
+    except Exception as e:                                                                                                                    
+        print("Error while searching key " + json + " in JSON response")                    
+        print(e)                                                                                                                              
+        sys.exit(1)    
+
+def get_data(response, json_path):
     try:
         data=json.loads(response)
-        return(dpath.util.get(data, json_path))
+        for obj in data[json_path]:
+            return(obj)
     except Exception as e:
         print("Unable to find the `json_path` within decoded JSON response")
         print(e)
@@ -51,13 +64,14 @@ def decode_response(response, json_path):
 if __name__ == "__main__":
     try:
         payload=sys.stdin.read()
-        url, verify_ssl, auth_token, post_data, content_type, json_path, version_key, file_name = extract_vars_from_payload(json.loads(payload))
+        url, verify_ssl, auth_token, post_data, content_type, json_path, json_key, file_name = extract_vars_from_payload(json.loads(payload))
         response=get_response_from_api(url, verify_ssl, auth_token, post_data, content_type)
-        version=str(decode_response(response, json_path+"/"+version_key))
-        element=decode_response(response, json_path)
-        with open(sys.argv[1]+'/'+file_name, 'w') as outfile:
-            outfile.write(json.dumps(element))
-            outfile.close()
+        version=str(get_ref(response, json_path, json_key))
+        data=get_data(response, json_path)
+        if data:
+            with open(sys.argv[1]+'/'+file_name, 'w') as outfile:
+                outfile.write(json.dumps(data))
+                outfile.close()
         print(json.dumps({"version":{"ref":version}}))
     except Exception as e:
         print("Unexpected error encountered in `main`")
