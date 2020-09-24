@@ -68,13 +68,15 @@ if __name__ == "__main__":
         response=get_response_from_api(url, verify_ssl, auth_token, post_data, content_type)
         version=str(get_ref(response, json_path, json_key))
         data=get_data(response, json_path)
+        metadata=[]
         if data:
             with open(sys.argv[1]+'/'+file_name, 'w') as outfile:
                 outfile.write(json.dumps(data))
                 outfile.close()
-        metadata=[]
-        for key in data.keys():
-            metadata.append({"name": key, "value": str(data[key])})
+            for key in data.keys():
+                metadata.append({"name": key, "value": str(data[key])})
+        else:
+            metadata.append({"name": "info", "value": "No patching requests to process"})
 
         print(json.dumps({"version":{"ref":version}, "metadata":metadata}))
 
