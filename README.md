@@ -43,22 +43,30 @@ resources:
     version_key: TARGET_ID
     file_name: api_data.json
     debug: true
-
-
-
 ```
 
-## development
+## Development
 
-### pre-reqs
+### Pre requirements
 
 `pip install -r requirements.txt` to get all of the required python libraries installed.
 
-### testing
+### Testing
 
 Unit tests exist for all functions.
 Run `pytest -v` to confirm that all tests pass before you make any changes, and run it again after changes to confirm that you've not broken anything.
 
 To test things out on the command line (outside of a Concourse pipeline) when doing development work, you will need to supply a suitable `payload` on stdin.
 
-e.g `echo '{"source": {"url": "https://some.url/some/path/to/use", "verify_ssl": "False", "auth_token":"<bearer_token>", "post_data":"{\"code\": \"CALL_TO_API_FUNCTION\"}", "content_type":"application/json", "json_path":"/path/to/key/in/json/dict"}}' | ./check.py`
+```bash
+echo '{
+  "source":{
+    "url": "https://ictechdev.uk.fid-intl.com/ictechdevapi/rest/api/v1/gen/qry/data/",
+    "verify_ssl": "False",
+    "auth_token": "aWN0aXNfYXBpOmljdGlz",
+    "post_data": "{\"code\": \"GET_PCH_PATCH_REQ_ORA_SCHEDULED\"}",
+    "content_type": "application/data",
+    "json_path": "GET_PCH_PATCH_REQ_ORA_SCHEDULED",
+    "version_key": "PTG_ID",
+"file_name": "patch-requests.json"}}' | ./check.py`
+```
