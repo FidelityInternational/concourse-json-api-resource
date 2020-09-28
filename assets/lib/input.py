@@ -76,7 +76,7 @@ if __name__ == "__main__":
             for key in data.keys():
                 metadata.append({"name": key, "value": str(data[key])})
         else:
-            metadata.append({"name": "info", "value": "No patching requests to process"})
+            metadata.append({"name": "message", "value": "No data received from API"})
 
         print(json.dumps({"version":{"ref":version}, "metadata":metadata}))
 
